@@ -103,7 +103,7 @@ def main(args):
                         
                         case 3:
                             #AP here
-                            print("Processing autentication message...")
+                            print("Processing authentication message...")
                             message_len = convert_bytes_to_int(read_bytes(client_socket, 8))
                             message = read_bytes(client_socket, message_len)
                             signed_message = private_key.sign(message, padding.PSS(mgf=padding.MGF1(hashes.SHA256()), salt_length=padding.PSS.MAX_LENGTH,), hashes.SHA256(),)
