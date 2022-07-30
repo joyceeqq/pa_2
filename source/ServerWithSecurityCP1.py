@@ -77,10 +77,9 @@ def main(args):
                         case 1:
                             # If the packet is for transferring a chunk of the file
                             start_time = time.time()
-
                             filename= "recv_" + filename.split("/")[-1]
 
-                            with open (f"recv_files_enc/enc_{filename}", mode ="wb") as fp:
+                            with open (f"recv_files/{filename}", mode ="wb") as fp:
                                 with open(f"recv_files_enc/enc_{filename}", mode="wb") as encf:
                                     while True:
                                         file_length = convert_bytes_to_int(read_bytes(client_socket, 8))

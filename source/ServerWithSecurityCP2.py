@@ -78,22 +78,24 @@ def main(args):
                             # If the packet is for transferring a chunk of the file
                             start_time = time.time()
 
-                            filename= "recv_" + filename.split("/")[-1]
+                            file_len = convert_bytes_to_int(
+                                read_bytes(client_socket, 8)
+                            )
+                            file_data = read_bytes(client_socket, file_len)
+                            # print(file_data)
 
-                            with open (f"recv_files_enc/enc_{filename}", mode ="wb") as fp:
-                                with open(f"recv_files_enc/enc_{filename}", mode="wb") as encf:
-                                    while True:
-                                        file_length = convert_bytes_to_int(read_bytes(client_socket, 8))
-                                        if not file_length:
-                                            break
-                                        file_data = read_bytes(client_socket, file_length)
-                                        print("File is encrypted and written to recv_files_enc")
-                                        if not file_data:
-                                            break
-                                        decryp_msg = private_key.decrypt(file_data, padding.PKCS1v15())
-                                        encf.write(file_data)
-                                        fp.write(decryp_msg)
-                            print(f"Recieved file in {(time.time() - start_time)}s")
+                            filename = "recv_" + filename.split("/")[-1]
+
+                            # Write the file with 'recv_' prefix
+                            with open(f"recv_files/{filename}", mode="wb") as fp:
+                                decrypted_long_message = sess_key.decrypt(file_data)
+                                fp.write(decrypted_long_message)
+                            print(
+                                f"Finished receiving file in {(time.time() - start_time)}s!"
+                            )
+                            #administrative work
+                            with open(f"recv_files_enc/enc_{filename}",mode="wb") as fp:
+                                fp.write(file_data)
 
                         case 2:
                             # Close the connection
